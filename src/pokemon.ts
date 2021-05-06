@@ -26,47 +26,28 @@ interface Pokemon {
 
 ///// Answers /////
 
-function answerOne() {
-  const legendaries: Pokemon[] = [];
-  for (let p of pokedex) {
-    let pokemon: Pokemon;
-    pokemon = p;
-    if (pokemon.legendary) {
-      legendaries.push(pokemon);
-    }
-  }
+function answerOne(pokedex: Pokemon[]) {
+  const legendaries: Pokemon[] = pokedex.filter(pokemon => pokemon.legendary);
   console.log(`\n1. There are ${legendaries.length} legendary Pokemon:`);
 
-  const legendaryNames: string[] = [];
-  for (let p of legendaries) {
-    legendaryNames.push(p.name);
-  }
+  const legendaryNames: string[] = legendaries.map(pokemon => pokemon.name);
   console.log(legendaryNames);
 }
 
-function answerTwo() {
+function answerTwo(pokedex: Pokemon[]) {
   console.log(`\n2. Here are the top 10 Pokemon with the highest (def) stat:`);
-  pokedex.sort(function (pokeA, pokeB) {
-    return pokeB.def - pokeA.def;
-  });
+  pokedex.sort((pokeA, pokeB) => pokeB.def - pokeA.def);
   for (let p of pokedex.slice(0, 10)) {
     console.log({ name: p.name, def: p.def });
   }
 }
 
-function answerThree() {
+function answerThree(pokedex: Pokemon[]) {
   console.log(`\n3. Here are the top 10 overweight Pokemon:`);
 
-  const overweightPokemon: Pokemon[] = [];
-  for (let p of pokedex) {
-    let pokemon: Pokemon;
-    pokemon = p;
-    if (pokemon.weight > pokemon.height * 60) {
-      overweightPokemon.push(pokemon);
-    }
-  }
+  const overweightPokemon: Pokemon[] = pokedex.filter(pokemon => pokemon.weight > pokemon.height * 60);
 
-  overweightPokemon.sort(function (pokeA, pokeB) {
+  overweightPokemon.sort((pokeA, pokeB) => {
     let aRate = pokeB.weight - pokeB.height * 60;
     let bRate = pokeA.weight - pokeA.height * 60;
     return bRate - aRate;
@@ -77,23 +58,21 @@ function answerThree() {
   }
 }
 
-function answerFour() {
+function answerFour(pokedex: Pokemon[]) {
   function getOccurrence(array: number[], value: any) {
     var count = 0;
     array.forEach((v) => v === value && count++);
     return count;
   }
 
-  const pokeNumber: number[] = [];
   const variedPokemon: any[] = [];
 
   pokedex.sort(function (pokeA, pokeB) {
     return pokeA.number - pokeB.number - (pokeB.code - pokeA.code);
   });
 
-  for (let p of pokedex) {
-    pokeNumber.push(p.number);
-  }
+  
+  const pokeNumber: number[] = pokedex.map(pokemon => pokemon.number);
 
   let pokeNm = [];
 
@@ -128,25 +107,15 @@ function answerFour() {
   console.log(pokeNames);
 }
 
-function answerFive() {
+function answerFive(pokedex: Pokemon[]) {
   console.log(
     `\n5. Here are the list of Pokemon types (and the amount of Pokemon having that type) from the the most common to the least:`
   );
 
-  const pokeTypes: string[] = [];
-
-  for (let p of pokedex) {
-    let pokemon: Pokemon;
-    pokemon = p;
-
-    if (typeof pokemon.type === "string") {
-      pokeTypes.push(pokemon.type);
-    } else {
-      for (let t of pokemon.type) {
-        pokeTypes.push(t);
-      }
-    }
-  }
+  const allPokeTypes: string[] = pokedex.map(pokemon => pokemon.type);
+  const stringPokeTypes: string[] = allPokeTypes.filter(type => type === "string");
+  const arrayPokeTypes: string[] = allPokeTypes.filter(type => type !== "string");
+  const pokeTypes = stringPokeTypes.concat(arrayPokeTypes.flatMap(a => a));
 
   let pokeTypesNoDuplicates: string[] = [...new Set(pokeTypes)];
   let PokeTypesNoDuplicatesPlus = [];
@@ -171,8 +140,8 @@ function answerFive() {
   }
 }
 
-answerOne();
-answerTwo();
-answerThree();
-answerFour();
-answerFive();
+answerOne([...pokedex]);
+answerTwo([...pokedex]);
+answerThree([...pokedex]);
+answerFour([...pokedex]);
+answerFive([...pokedex]);
